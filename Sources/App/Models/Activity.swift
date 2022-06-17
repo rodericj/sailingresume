@@ -25,7 +25,26 @@ final class Activity: Model, Content {
   @Field(key: "note")
   var note: String
 
+  var geojson: String {
+     "https://api.mapbox.com/datasets/v1/\(user)/\(datasetID)/features/\(featureID)?access_token=sk.eyJ1Ijoicm9kZXJpYyIsImEiOiJjbDRoN2R2MnkwMXdkM2NtcHVvaTRjZTI1In0.MFj96n_AhvvYpp3cxS7zCQ"
+  }
+
   init() { }
+
+  func encode(to encoder: Encoder)throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(self.user, forKey: .user)
+    try container.encode(self.title, forKey: .title)
+    try container.encode(self.note, forKey: .note)
+    try container.encode(self.geojson, forKey: .geojson)
+    try container.encode(self.date, forKey: .date)
+    try container.encode(self.featureID, forKey: .featureID)
+    try container.encode(self.datasetID, forKey: .datasetID)
+  }
+
+  enum CodingKeys: String, CodingKey {
+    case date, title, featureID, user, note, id, geojson, datasetID
+  }
 
   init(id: UUID? = nil,
        title: String,

@@ -28,15 +28,13 @@
 #for(activity in activities):
   <div class="row" name="activity row">
 
-    <div class="row" name="activity title">
-        <h1>#(activity.title)</h1>
+    <div class="row border-top border-left border-right" name="activity title" style="background-color:#66c2a5">
+       <p> <h2 class="text-light">#(activity.title)</h2></p>
     </div>
 
-    <div class="row">
-        <div class="col" name="activity metadata"">
+    <div class="row bg-light">
+        <div class="col" name="activity metadata">
             <b>Date:</b> #(activity.date)<br>
-            <b>dataSetID:</b> #(activity.datasetID)<br>
-            <b>featureID:</b> #(activity.featureID)<br>
             <b>wind:</b> NW 12kn<br>
             <b>Temperature:</b> 81F <br>
         </div>
@@ -44,7 +42,7 @@
         <div class="col-xl" id="map#(index)" name="map column"  style="height: 300px;"></div>
     </div>
 
-    <div class="row">
+    <div class="row bg-light">
     <p>
         <b>Note:</b> #(activity.note)<br>
     </p>
@@ -61,10 +59,33 @@
 #for(activity in activities):
     const map#(index) = new mapboxgl.Map({
         container: 'map#(index)', // container ID
-        style: 'mapbox://styles/mapbox/streets-v11', // style URL
+        style: 'mapbox://styles/roderic/cl2uwp1qq001f14qzgapci66e', // style URL
         center: [-74.5, 40], // starting position [lng, lat]
         zoom: 9 // starting zoom
     });
+
+        map#(index).on('load', () => {
+            map#(index).addSource('route', {
+                type: 'geojson',
+                // Use a URL for the value for the `data` property.
+                data: '#(activity.geojson)'
+            });
+
+
+            map#(index).addLayer({
+          'id': 'route',
+          'type': 'line',
+          'source': 'route',
+          'layout': {
+              'line-join': 'round',
+              'line-cap': 'round'
+          },
+          'paint': {
+              'line-color': '#ff0000',
+              'line-width': 8
+          }
+      });
+});
 #endfor
 
 </script>
