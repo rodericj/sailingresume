@@ -8,14 +8,10 @@ struct IndexBody: Content {
 
 func routes(_ app: Application) throws {
   app.get { req async throws -> View in
-      let activities = try await Activity.query(on: req.db).all()
-    let body = IndexBody(title: "Activities", activities: activities)
+    let activities = try await Activity.query(on: req.db).all()
+    let body = IndexBody(title: "Sailing Events", activities: activities)
     return try await req.view.render("index", body)
-    }
-
-    app.get("hello") { req -> String in
-        return "Hello, world!"
-    }
+  }
 
   try app.register(collection: TodoController())
   try app.register(collection: ActivityController())

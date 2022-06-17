@@ -9,6 +9,8 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
 
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 
   <style>
     body { margin: 100; padding: 100; }
@@ -16,20 +18,42 @@
   </style>
 
 </head>
-
-  <h1>#(title)</h1>
-  There are #count(activities) activities.
-
+<div class="container">
+  <div class="row">
+    <h1>#(title)</h1>
+    <p>
+    There are #count(activities) activities.
+    </p>
+  </div>
 
 #for(activity in activities):
-    <p><h1>Title #(activity.title)</h1>
-    <h2>Note: #(activity.note)</h2>
-    Date #(activity.date) <br>
-    dataSetID: #(activity.datasetID)<br>
-    featureID: #(activity.featureID)
-    </p>
-#endfor
+  <div class="row">
 
+    <div class="row">
+        <h1>Title #(activity.title)</h1>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <b>Date:</b> #(activity.date)<br>
+            <b>dataSetID:</b> #(activity.datasetID)<br>
+            <b>featureID:</b> #(activity.featureID)<br>
+
+        </div>
+
+        <div class="col-8">
+            This is the map
+        </div>
+    </div>
+
+    <div class="row">
+    <p>
+        <b>Note:</b> #(activity.note)<br>
+    </p>
+    </div>
+  </div>
+
+#endfor
 </div>
 
 
