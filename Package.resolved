@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "coregpx",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vincentneo/CoreGPX.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "9403ca9f12d33ff02db95dcb089d856bab5c287e"
+      }
+    },
+    {
       "identity" : "fluent",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/fluent.git",
