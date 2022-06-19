@@ -16,8 +16,11 @@ public func configure(_ app: Application) throws {
     database: Environment.get("DATABASE_NAME") ?? "sailingresume"
   ), as: .psql)
 
-  app.migrations.add(CreateDatasetReference())
-  app.migrations.add(CreateActivities())
+
+  app.migrations.add(CreateTracks())
+  app.migrations.add(CreatePoints())
+//  app.migrations.add(CreateDatasetReference())
+//  app.migrations.add(CreateActivities())
 
   app.views.use(.leaf)
 

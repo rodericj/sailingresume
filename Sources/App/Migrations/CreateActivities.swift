@@ -1,5 +1,6 @@
 import Fluent
 import Foundation
+
 struct CreateActivities: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema("activities")
