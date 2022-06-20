@@ -20,4 +20,6 @@ func routes(_ app: Application) throws {
   try app.register(collection: ActivityController())
   try app.register(collection: DatasetReferenceController())
   try app.register(collection: trackController)
+  print(app.routes.all)
+
 }

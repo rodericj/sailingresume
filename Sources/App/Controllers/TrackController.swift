@@ -2,13 +2,45 @@ import Fluent
 import Vapor
 import CoreGPX
 
+struct GeoJsonResponse: Content {
+  struct Feature: Content {
+    struct Geometry: Content {
+      var type: String = "LineString"
+      let coordinates: [[Double]]
+    }
+    var type: String = "Feature"
+    let geometry: Geometry
+  }
+  var type: String = "FeatureCollection"
+  let features: [Feature]
+}
+
+extension Track {
+  var geoJson: GeoJsonResponse {
+    let coordinatePairs = self.points.map({ point in
+      return [point.latitude, point.longitude]
+    })
+    return .init(features: [.init(geometry: .init(coordinates: coordinatePairs))])
+  }
+}
+
 struct TrackController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
     let tracks = routes.grouped("tracks")
     tracks.get(use: index)
-    tracks.group(":trackID") { todo in
-      todo.delete(use: delete)
+    tracks.group(":trackID") { track in
+      track.delete(use: delete)
+      track.get("geojson", use: geojson)
     }
+  }
+
+  func geojson(req: Request) async throws -> GeoJsonResponse {
+    guard let track = try await Track.find(req.parameters.get("trackID"), on: req.db) else {
+      throw Abort(.notFound)
+    }
+    try await track.$points.load(on: req.db)
+
+    return track.geoJson
   }
 
   func index(req: Request) async throws -> [Track] {
