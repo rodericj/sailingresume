@@ -21,11 +21,11 @@
   <div class="row">
     <h1>#(title)</h1>
     <p>
-    There are #count(activities) activities.
+    There are #count(tracks) activities.
     </p>
   </div>
 
-#for(activity in activities):
+#for(activity in tracks):
   <div class="row" name="activity row">
 
     <div class="row border-top border-left border-right" name="activity title" style="background-color:#66c2a5">
@@ -56,7 +56,7 @@
 <script>
     mapboxgl.accessToken = 'pk.eyJ1Ijoicm9kZXJpYyIsImEiOiJja2t2ajNtMXMxZjdjMm9wNmYyZHR1ZWN3In0.mM6CghYW2Uil53LD5uQrGw';
 
-#for(activity in activities):
+#for(activity in tracks):
     const map#(index) = new mapboxgl.Map({
         container: 'map#(index)', // container ID
         style: 'mapbox://styles/roderic/cl2uwp1qq001f14qzgapci66e', // style URL
@@ -68,7 +68,7 @@
             map#(index).addSource('route', {
                 type: 'geojson',
                 // Use a URL for the value for the `data` property.
-                data: '#(activity.geojson)'
+                data: "http://localhost:8080/tracks/#(activity.id)/geojson"
             });
 
 

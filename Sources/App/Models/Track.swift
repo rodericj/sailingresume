@@ -1,5 +1,4 @@
 import Vapor
-import CoreLocation
 import Fluent
 
 public final class Point: Content, Model {
@@ -32,7 +31,7 @@ public final class Point: Content, Model {
 
 final class Track: Model, Content {
   init() {}
-  
+
   static let schema = "tracks"
 
   @ID(key: .id)

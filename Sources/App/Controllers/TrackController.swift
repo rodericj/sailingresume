@@ -17,8 +17,12 @@ struct GeoJsonResponse: Content {
 
 extension Track {
   var geoJson: GeoJsonResponse {
-    let coordinatePairs = self.points.map({ point in
-      return [point.latitude, point.longitude]
+    let coordinatePairs = self.points
+      .sorted(by: { a, b in
+        a.date < b.date
+      })
+      .map({ point in
+      return [point.longitude, point.latitude]
     })
     return .init(features: [.init(geometry: .init(coordinates: coordinatePairs))])
   }

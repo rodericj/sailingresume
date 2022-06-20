@@ -7,7 +7,6 @@
 
 import XCTest
 import CoreGPX
-import CoreLocation
 
 class GPXTests: XCTestCase {
 
