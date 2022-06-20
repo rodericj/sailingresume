@@ -51,7 +51,7 @@ extension Request {
       return eventLoop.makeFailedFuture(TrackError.FileNotWrittenToOrNotFound)
     }
     let track = Track()
-    return track.save(on: self.db).flatMap ({ _ in
+    return track.create(on: self.db).flatMap ({ _ in
       return track.addPoints(from: parser, on: self)
     })
   }
@@ -59,15 +59,17 @@ extension Request {
 
 extension Track {
   func addPoints(from parsedData: GPXRoot, on req: Request) -> EventLoopFuture<Void> {
-    let points = parsedData.tracks.first?.segments.first?.points.compactMap({ waypoint -> Point? in
+    let points = parsedData.tracks.first?.segments.first?.points.compactMap({ waypoint -> PointEnvelope? in
       guard let time = waypoint.time, let latitude = waypoint.latitude, let longitude = waypoint.longitude else { return nil }
-      return Point(time: time, latutude: latitude, longitude: longitude)
+      return PointEnvelope(date: time, latitude: latitude, longitude: longitude)
     }) ?? []
-    print(points.count)
-
-    let firstFew = points[0...1000] // TODO create a job to batch these up
-    return self.$points.create(Array(firstFew), on: req.db).flatMap { _ in
-      self.save(on: req.db)
-    }
+    let jobs = points.chunks(ofCount: 2000).map { chunk in
+      Array(chunk)
+    }.map { chunk -> EventLoopFuture<Void> in
+      req
+        .queue
+        .dispatch(TrackCreationJob.self, TrackPointsCreationTask(points: chunk, track: self))
+    }.flatten(on: req.eventLoop)
+    return jobs
   }
 }

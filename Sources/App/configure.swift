@@ -2,6 +2,7 @@ import Fluent
 import FluentPostgresDriver
 import Leaf
 import Vapor
+import QueuesFluentDriver
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -19,8 +20,20 @@ public func configure(_ app: Application) throws {
 
   app.migrations.add(CreateTracks())
   app.migrations.add(CreatePoints())
+  app.migrations.add(JobModelMigrate())
+
+  let trackJob = TrackCreationJob()
+  app.queues.add(trackJob)
+
+  app.queues.use(.fluent())
+
 //  app.migrations.add(CreateDatasetReference())
 //  app.migrations.add(CreateActivities())
+
+
+//  try app.queues.use(.redis(url: "redis://127.0.0.1:6379")) // TODO need to parameterize this
+  try app.queues.startInProcessJobs(on: .default)
+  try app.queues.startScheduledJobs()
 
   app.views.use(.leaf)
 

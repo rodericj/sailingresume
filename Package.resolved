@@ -109,6 +109,15 @@
       }
     },
     {
+      "identity" : "queues",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/queues.git",
+      "state" : {
+        "revision" : "58b2d785118d164b38c59beb595cbffbea7608ef",
+        "version" : "1.8.1"
+      }
+    },
+    {
       "identity" : "routing-kit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/routing-kit.git",
@@ -241,6 +250,15 @@
       "state" : {
         "revision" : "12e2e7460ab912b65fb7a0fe47e4f638a7d5e642",
         "version" : "4.62.0"
+      }
+    },
+    {
+      "identity" : "vapor-queues-fluent-driver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/m-barthelemy/vapor-queues-fluent-driver.git",
+      "state" : {
+        "revision" : "f623ad13ada3e01d416f5fc520d72ef4c3a8c632",
+        "version" : "1.2.0"
       }
     },
     {

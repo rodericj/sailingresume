@@ -22,10 +22,11 @@ public final class Point: Content, Model {
   @Field(key: "date")
   var date: Date
 
-  init(time: Date, latutude: Double, longitude: Double) {
+  init(time: Date, latutude: Double, longitude: Double, trackID: Track.IDValue) {
     self.date = time
     self.latitude = latutude
     self.longitude = longitude
+    self.$track.id = trackID
   }
 }
 
