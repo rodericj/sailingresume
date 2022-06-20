@@ -28,7 +28,7 @@ public func configure(_ app: Application) throws {
   app.queues.use(.fluent())
 
   try app.queues.startInProcessJobs(on: .default)
-  try app.queues.startScheduledJobs()
+//  try app.queues.startScheduledJobs()
 
   app.views.use(.leaf)
 

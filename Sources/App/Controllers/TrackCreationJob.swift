@@ -4,6 +4,7 @@ import Queues
 
 enum TrackJobError: Error {
   case noTrackID
+  case trackQueriedAndNotFound
 }
 struct PointEnvelope: Codable {
   let date: Date
@@ -24,7 +25,21 @@ struct TrackCreationJob: Job {
     let points = payload.points.map { envelope in
       Point(time: envelope.date, latutude: envelope.latitude, longitude: envelope.longitude, trackID: try! track.requireID())
     }
-    return points.create(on: db)
+    return points.create(on: db).flatMap { _ in
+      let id: UUID
+      do {
+        id = try track.requireID()
+      } catch {
+        return context.eventLoop.makeFailedFuture(error)
+      }
+      print(id)
+      return Track.find(track.id, on: db).flatMap { track in
+        guard let track = track else {
+          return context.eventLoop.makeFailedFuture(TrackJobError.trackQueriedAndNotFound)
+        }
+        return track.update(on: db)
+      }
+    }
   }
 
   func error(_ context: QueueContext, _ error: Error, _ payload: TrackPointsCreationTask) -> EventLoopFuture<Void> {

@@ -30,7 +30,12 @@ public final class Point: Content, Model {
 }
 
 final class Track: Model, Content {
-  init() {}
+  init() {
+    maxLatitude = -10000
+    maxLongitude = -10000
+    minLatitude = 10000
+    minLongitude = 10000
+  }
 
   static let schema = "tracks"
 
@@ -40,7 +45,16 @@ final class Track: Model, Content {
   @Children(for: \.$track)
   var points: [Point]
 
-  init(with points: [Point]) {
-    self.points = points
-  }
+  @Field(key: "max_latitude")
+  var maxLatitude: Double
+
+  @Field(key: "max_longitude")
+  var maxLongitude: Double
+
+  @Field(key: "min_latitude")
+  var minLatitude: Double
+
+  @Field(key: "min_longitude")
+  var minLongitude: Double
+
 }
