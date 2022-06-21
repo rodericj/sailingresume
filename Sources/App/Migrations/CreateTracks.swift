@@ -26,6 +26,7 @@ struct CreatePoints: AsyncMigration {
             .field("date", .datetime, .required)
             .field("latitude", .double, .required)
             .field("longitude", .double, .required)
+//            .foreignKey("track_id", references: "tracks", "id", onDelete: .cascade)
             .create()
     }
   func revert(on database: Database) async throws {

@@ -13,7 +13,8 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0"),
         .package(url: "https://github.com/vapor/leaf.git", from: "4.0.0"),
         .package(name: "QueuesFluentDriver", url: "https://github.com/m-barthelemy/vapor-queues-fluent-driver.git", from: "1.2.0"),
-        .package(url: "https://github.com/vincentneo/CoreGPX.git", branch: "master")
+        .package(url: "https://github.com/vincentneo/CoreGPX.git", branch: "master"),
+        .package(url: "https://github.com/weichsel/ZIPFoundation.git", .upToNextMajor(from: "0.9.0"))
     ],
     targets: [
         .target(
@@ -25,6 +26,7 @@ let package = Package(
                 .product(name: "Vapor", package: "vapor"),
                 .product(name: "CoreGPX", package: "CoreGPX"),
                 .product(name: "QueuesFluentDriver", package: "QueuesFluentDriver"),
+                .product(name: "ZIPFoundation", package: "ZipFoundation")
             ],
             swiftSettings: [
                 // Enable better optimizations when building in Release configuration. Despite the use of

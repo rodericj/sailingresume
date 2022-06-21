@@ -32,7 +32,6 @@ struct TrackCreationJob: Job {
       } catch {
         return context.eventLoop.makeFailedFuture(error)
       }
-      print(id)
       return Track.find(track.id, on: db).flatMap { track in
         guard let track = track else {
           return context.eventLoop.makeFailedFuture(TrackJobError.trackQueriedAndNotFound)

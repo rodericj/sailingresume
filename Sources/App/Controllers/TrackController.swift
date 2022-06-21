@@ -1,6 +1,7 @@
 import Fluent
 import Vapor
 import CoreGPX
+import ZIPFoundation
 
 struct GeoJsonResponse: Content {
   struct Feature: Content {
@@ -77,6 +78,56 @@ struct TrackController: RouteCollection {
       .map { HTTPStatus.accepted }
   }
 
+  private func unzip(req: Request, source: URL, dest: URL) throws -> EventLoopFuture<Void> {
+    let fileManager = FileManager()
+    try fileManager.unzipItem(at: source, to: dest)
+    return req.eventLoop.future()
+  }
+
+  private func findGPXFilesAndExtract(req: Request, dest: URL) -> EventLoopFuture<Void>{
+    let fileManager = FileManager()
+    do {
+      let contents = try fileManager.contentsOfDirectory(atPath: dest.path)
+      return contents.filter { filePath in
+        filePath.hasSuffix(".gpx")
+      }.map { gpxFile in
+        var gpxFileURL = dest
+        gpxFileURL.appendPathComponent(gpxFile)
+        return req.extractDataFromGPX(at: gpxFileURL.path).flatMap { _ in
+          do {
+            try fileManager.removeItem(at: gpxFileURL)
+          } catch {
+            return req.eventLoop.future(error: error)
+          }
+          return req.eventLoop.future()
+        }
+      }.flatten(on: req.eventLoop)
+    } catch {
+      return req.eventLoop.makeFailedFuture(error)
+    }
+  }
+
+  func bulkCreate(req: Request) throws -> EventLoopFuture<HTTPResponseStatus> {
+    // Need to do the file upload here
+    let key = try req.query.get(String.self, at: "key")
+    let path = req.application.directory.publicDirectory + key
+    let sourceURL = URL(fileURLWithPath: path)
+    var destURL = sourceURL
+    destURL.deleteLastPathComponent()
+
+    return req.body.collect()
+      .unwrap(or: Abort(.noContent))
+      .flatMap({ byteBuffer in
+        req.fileio.writeFile(byteBuffer, at: path)
+      })
+      .flatMapThrowing({ _ in
+        try unzip(req: req, source: sourceURL, dest: destURL)
+      })
+      .flatMap({ _ -> EventLoopFuture<Void> in
+        findGPXFilesAndExtract(req: req, dest: destURL)
+      })
+      .map { HTTPStatus.accepted }
+  }
 
   func delete(req: Request) async throws -> HTTPStatus {
     guard let track = try await Track.find(req.parameters.get("trackID"), on: req.db) else {
