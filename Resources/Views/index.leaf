@@ -34,9 +34,10 @@
 
 </a>
 #endfor
+
 </div>
-pages #(page.page) number per #(page.per) . total:  #(pageCount)
-<nav aria-label="Page navigation example">
+
+<nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">
     #if(page.page != 1):
           <li class="page-item"><a class="page-link" href="?page=#(page.page-1)&per=#(page.per)">Previous</a></li>
@@ -54,7 +55,7 @@ pages #(page.page) number per #(page.per) . total:  #(pageCount)
     #else:
         <li class="page-item"><a class="page-link" href="?page=#(page.page+1)&per=#(page.per)">#(page.page+1)</a></li>
         <li class="page-item"><a class="page-link" href="?page=#(page.page+1)&per=#(page.per)">Next</a></li>
-    #endif:
+    #endif
   </ul>
 </nav>
 
