@@ -22,11 +22,10 @@ struct CreatePoints: AsyncMigration {
     func prepare(on database: Database) async throws {
         try await database.schema("points")
             .id()
-            .field("track_id", .uuid, .required, .references("tracks", "id"))
+            .field("track_id", .uuid, .required, .references("tracks", "id", onDelete: .cascade))
             .field("date", .datetime, .required)
             .field("latitude", .double, .required)
             .field("longitude", .double, .required)
-//            .foreignKey("track_id", references: "tracks", "id", onDelete: .cascade)
             .create()
     }
   func revert(on database: Database) async throws {

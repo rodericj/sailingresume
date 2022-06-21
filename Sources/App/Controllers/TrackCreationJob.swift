@@ -26,12 +26,6 @@ struct TrackCreationJob: Job {
       Point(time: envelope.date, latutude: envelope.latitude, longitude: envelope.longitude, trackID: try! track.requireID())
     }
     return points.create(on: db).flatMap { _ in
-      let id: UUID
-      do {
-        id = try track.requireID()
-      } catch {
-        return context.eventLoop.makeFailedFuture(error)
-      }
       return Track.find(track.id, on: db).flatMap { track in
         guard let track = track else {
           return context.eventLoop.makeFailedFuture(TrackJobError.trackQueriedAndNotFound)
