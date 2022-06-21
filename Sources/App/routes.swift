@@ -4,12 +4,24 @@ import Vapor
 struct IndexBody: Content {
   let title: String
   let tracks: [Track]
+  var page: Pagination? = nil
+  var pageCount: Int? = nil
 }
 
+struct Pagination: Content {
+  var page: Int = 0
+  var per: Int = 0
+}
 func routes(_ app: Application) throws {
   app.get { req async throws -> View in
-    let tracks = try await Track.query(on: req.db).sort(\.$startDate).all()
-    let body = IndexBody(title: "Sailing Events", tracks: tracks.reversed())
+    let tracksPaginator = try await Track.query(on: req.db).sort(\.$startDate).paginate(for: req)
+    let body = IndexBody(
+      title: "Sailing Events",
+      tracks: tracksPaginator.items.reversed(),
+      page: try req.query.decode(Pagination.self),
+      pageCount: tracksPaginator.metadata.pageCount
+    )
+    print(body.page, body.pageCount)
     return try await req.view.render("index", body)
   }
   app.routes.defaultMaxBodySize = "10mb"

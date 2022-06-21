@@ -58,8 +58,8 @@ struct TrackController: RouteCollection {
 
   }
 
-  func index(req: Request) async throws -> [Track] {
-    try await Track.query(on: req.db).all()
+  func index(req: Request) async throws -> Page<Track> {
+    try await Track.query(on: req.db).paginate(for: req)
   }
 
   func create(req: Request) throws -> EventLoopFuture<HTTPResponseStatus> {
