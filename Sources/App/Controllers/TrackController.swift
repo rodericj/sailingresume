@@ -35,6 +35,7 @@ struct TrackController: RouteCollection {
     tracks.group(":trackID") { track in
       track.delete(use: delete)
       track.get("geojson", use: geojson)
+      track.get(use: detail)
     }
   }
 
@@ -45,6 +46,15 @@ struct TrackController: RouteCollection {
     try await track.$points.load(on: req.db)
 
     return track.geoJson
+  }
+
+  func detail(req: Request) async throws -> View {
+    guard let track = try await Track.find(req.parameters.get("trackID"), on: req.db) else {
+      throw Abort(.notFound)
+    }
+    let body = IndexBody(title: "Sailing Events", tracks: [track])
+    return try await req.view.render("detail", body)
+
   }
 
   func index(req: Request) async throws -> [Track] {

@@ -1,0 +1,42 @@
+
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoicm9kZXJpYyIsImEiOiJja2t2ajNtMXMxZjdjMm9wNmYyZHR1ZWN3In0.mM6CghYW2Uil53LD5uQrGw';
+
+#for(track in tracks):
+    const map#(index) = new mapboxgl.Map({
+        container: 'map#(index)', // container ID
+        style: 'mapbox://styles/roderic/cl2uwp1qq001f14qzgapci66e', // style URL
+        bounds: new mapboxgl.LngLatBounds(
+                    new mapboxgl.LngLat(#(track.maxLongitude), #(track.maxLatitude)),
+                    new mapboxgl.LngLat(#(track.minLongitude), #(track.minLatitude)))
+    });
+
+    map#(index).on('load', () => {
+        map#(index).addSource('route', {
+            type: 'geojson',
+            // Use a URL for the value for the `data` property.
+            data: "http://localhost:8080/tracks/#(track.id)/geojson"
+        });
+
+
+    map#(index).addLayer({
+      'id': 'route',
+      'type': 'line',
+      'source': 'route',
+      'layout': {
+          'line-join': 'round',
+          'line-cap': 'round'
+      },
+      'paint': {
+          'line-color': '#ff0000',
+          'line-width': 8
+      }
+  });
+});
+#endfor
+
+</script>
+
+</body>
+</html>

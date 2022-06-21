@@ -1,22 +1,5 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
+#extend("head")
 
-  <title>#(title)</title>
-
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-
-  <style>
-    body { margin: 10; padding: 10; }
-    #map { position: relative; top: 0; bottom: 0; width: 50%; }
-  </style>
-
-</head>
 <div class="container">
   <div class="row">
     <h1>#(title)</h1>
@@ -26,6 +9,7 @@
   </div>
 
 #for(track in tracks):
+<a class="nav-link active" aria-current="page" href = "/tracks/#(track.id)">
   <div class="row" name="track row">
 
     <div class="row border-top border-left border-right" name="track title" style="background-color:#66c2a5">
@@ -48,47 +32,7 @@
     </div>
   </div>
 
-
+</a>
 #endfor
 </div>
-
-<script>
-    mapboxgl.accessToken = 'pk.eyJ1Ijoicm9kZXJpYyIsImEiOiJja2t2ajNtMXMxZjdjMm9wNmYyZHR1ZWN3In0.mM6CghYW2Uil53LD5uQrGw';
-
-#for(track in tracks):
-    const map#(index) = new mapboxgl.Map({
-        container: 'map#(index)', // container ID
-        style: 'mapbox://styles/roderic/cl2uwp1qq001f14qzgapci66e', // style URL
-        bounds: new mapboxgl.LngLatBounds(
-                    new mapboxgl.LngLat(#(track.maxLongitude), #(track.maxLatitude)),
-                    new mapboxgl.LngLat(#(track.minLongitude), #(track.minLatitude)))
-    });
-
-    map#(index).on('load', () => {
-        map#(index).addSource('route', {
-            type: 'geojson',
-            // Use a URL for the value for the `data` property.
-            data: "http://localhost:8080/tracks/#(track.id)/geojson"
-        });
-
-
-    map#(index).addLayer({
-      'id': 'route',
-      'type': 'line',
-      'source': 'route',
-      'layout': {
-          'line-join': 'round',
-          'line-cap': 'round'
-      },
-      'paint': {
-          'line-color': '#ff0000',
-          'line-width': 8
-      }
-  });
-});
-#endfor
-
-</script>
-
-</body>
-</html>
+#extend("footer")
