@@ -29,12 +29,11 @@
   <div class="row" name="track row">
 
     <div class="row border-top border-left border-right" name="track title" style="background-color:#66c2a5">
-       <p> <h2 class="text-light">#(track.title)</h2></p>
+       <p> <h2 class="text-light">#(track.title) #date(track.startDate, "MMMM dd, yyyy")</h2></p>
     </div>
 
     <div class="row bg-light">
         <div class="col" name="track metadata">
-            <b>Date:</b> #(track.date)<br>
             <b>wind:</b> NW 12kn #(track.maxLatitude)<br>
             <b>Temperature:</b> 81F <br>
         </div>

@@ -57,4 +57,9 @@ final class Track: Model, Content {
   @Field(key: "min_longitude")
   var minLongitude: Double
 
+  @Field(key: "start_date")
+  var startDate: Date
+
+  @Field(key: "end_date")
+  var endDate: Date
 }

@@ -17,6 +17,9 @@ public func configure(_ app: Application) throws {
     database: Environment.get("DATABASE_NAME") ?? "sailingresume"
   ), as: .psql)
 
+  let decoder = JSONEncoder()
+  decoder.dateEncodingStrategy = .secondsSince1970
+  ContentConfiguration.global.use(encoder: decoder, for: .html)
 
   app.migrations.add(CreateTracks())
   app.migrations.add(CreatePoints())

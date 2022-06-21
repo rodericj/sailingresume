@@ -99,17 +99,25 @@ extension Track {
       guard let time = waypoint.time, let latitude = waypoint.latitude, let longitude = waypoint.longitude else { return nil }
       return PointEnvelope(date: time, latitude: latitude, longitude: longitude)
     }) ?? []
-    
-    self.maxLongitude = points.reduce(Double(-100000)) { currentMaxLongitude, point in
+
+    startDate = points.min { lhs, rhs in
+      lhs.date < rhs.date
+    }?.date ?? Date()
+
+    endDate = points.max { lhs, rhs in
+      lhs.date < rhs.date
+    }?.date ?? Date()
+
+    maxLongitude = points.reduce(Double(-100000)) { currentMaxLongitude, point in
       return max(currentMaxLongitude, point.longitude)
     }
-    self.maxLatitude = points.reduce(Double(-100000)) { currentMaxLatitude, point in
+    maxLatitude = points.reduce(Double(-100000)) { currentMaxLatitude, point in
       return max(currentMaxLatitude, point.latitude)
     }
-    self.minLongitude = points.reduce(Double(100000)) { currentMinLongitude, point in
+    minLongitude = points.reduce(Double(100000)) { currentMinLongitude, point in
       return min(currentMinLongitude, point.longitude)
     }
-    self.minLatitude = points.reduce(Double(100000)) { currentMinLatitude, point in
+    minLatitude = points.reduce(Double(100000)) { currentMinLatitude, point in
       return min(currentMinLatitude, point.latitude)
     }
     return self.save(on: req.db).flatMap { _ in

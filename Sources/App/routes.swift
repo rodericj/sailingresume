@@ -8,8 +8,8 @@ struct IndexBody: Content {
 
 func routes(_ app: Application) throws {
   app.get { req async throws -> View in
-    let tracks = try await Track.query(on: req.db).all()
-    let body = IndexBody(title: "Sailing Events", tracks: tracks)
+    let tracks = try await Track.query(on: req.db).sort(\.$startDate).all()
+    let body = IndexBody(title: "Sailing Events", tracks: tracks.reversed())
     return try await req.view.render("index", body)
   }
   app.routes.defaultMaxBodySize = "10mb"
