@@ -8,6 +8,7 @@ struct CreateTracks: AsyncMigration {
             .field("min_longitude", .double)
             .field("max_latitude", .double)
             .field("min_latitude", .double)
+            .field("title", .string)
             .field("start_date", .date)
             .field("end_date", .date)
             .create()

@@ -45,6 +45,9 @@ final class Track: Model, Content {
   @Children(for: \.$track)
   var points: [Point]
 
+  @Field(key: "title")
+  var title: String
+
   @Field(key: "max_latitude")
   var maxLatitude: Double
 

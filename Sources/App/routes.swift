@@ -6,6 +6,7 @@ struct IndexBody: Content {
   let tracks: [Track]
   var page: Pagination? = nil
   var pageCount: Int? = nil
+  var total: Int? = nil
 }
 
 struct Pagination: Content {
@@ -25,7 +26,8 @@ func routes(_ app: Application) throws {
       title: "Sailing Events",
       tracks: tracksPaginator.items.reversed(),
       page: try req.query.decode(Pagination.self),
-      pageCount: tracksPaginator.metadata.pageCount
+      pageCount: tracksPaginator.metadata.pageCount,
+      total: tracksPaginator.metadata.total
     )
     return try await req.view.render("index", body)
   }

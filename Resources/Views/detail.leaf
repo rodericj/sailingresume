@@ -15,6 +15,14 @@
         <div class="col" name="track metadata">
           <b>wind:</b> NW 12kn #(track.maxLatitude)<br>
           <b>Temperature:</b> 81F <br>
+             <form method="POST" action="#(track.id)/delete">
+                <div class="form-group input-group">
+                  <input type="text" name="track" class="form-control" value="#(track.id)" disabled>
+                  <span class="input-group-btn">
+                    <input class="btn btn-danger" type="submit" value="delete" />
+                  </span>
+                </div>
+            </form>
         </div>
     <p>
         <b>Note:</b> #(track.note)<br>

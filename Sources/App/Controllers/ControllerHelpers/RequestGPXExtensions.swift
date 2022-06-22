@@ -11,6 +11,7 @@ extension Request {
       return eventLoop.makeFailedFuture(TrackError.FileNotWrittenToOrNotFound)
     }
     let track = Track()
+    track.title = parser.tracks.first?.name ?? ""
     return track.create(on: self.db).flatMap ({ _ in
       return track.addPoints(parser.points, on: self)
     })

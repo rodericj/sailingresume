@@ -23,8 +23,8 @@ extension Track {
         a.date < b.date
       })
       .map({ point in
-      return [point.longitude, point.latitude]
-    })
+        return [point.longitude, point.latitude]
+      })
     return .init(features: [.init(geometry: .init(coordinates: coordinatePairs))])
   }
 }
@@ -37,6 +37,7 @@ struct TrackController: RouteCollection {
       track.delete(use: delete)
       track.get("geojson", use: geojson)
       track.get(use: detail)
+      track.post("delete", use: deleteFromWeb)
     }
   }
 
@@ -127,6 +128,14 @@ struct TrackController: RouteCollection {
         findGPXFilesAndExtract(req: req, dest: destURL)
       })
       .map { HTTPStatus.accepted }
+  }
+
+  func deleteFromWeb(_ req: Request) async throws -> Response {
+    guard let track = try await Track.find(req.parameters.get("trackID"), on: req.db) else {
+      return Response(status: .badRequest)
+    }
+    try await track.delete(on: req.db)
+    return req.redirect(to: "/", type: .permanent)
   }
 
   func delete(req: Request) async throws -> HTTPStatus {
