@@ -14,6 +14,12 @@ struct Pagination: Content {
 }
 func routes(_ app: Application) throws {
   app.get { req async throws -> View in
+    do {
+      _ = try req.query.get(Int.self, at: "page")
+      _ = try req.query.get(Int.self, at: "per")
+    } catch {
+      throw Abort.redirect(to: "/?page=1&per=10", type: .permanent)
+    }
     let tracksPaginator = try await Track.query(on: req.db).sort(\.$startDate).paginate(for: req)
     let body = IndexBody(
       title: "Sailing Events",
@@ -21,7 +27,6 @@ func routes(_ app: Application) throws {
       page: try req.query.decode(Pagination.self),
       pageCount: tracksPaginator.metadata.pageCount
     )
-    print(body.page, body.pageCount)
     return try await req.view.render("index", body)
   }
   app.routes.defaultMaxBodySize = "10mb"
