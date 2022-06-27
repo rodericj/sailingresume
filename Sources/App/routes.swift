@@ -36,8 +36,6 @@ func routes(_ app: Application) throws {
   app.routes.defaultMaxBodySize = "10mb"
 
   let trackController = TrackController()
-  app.on(.POST, "upload", body: .collect(maxSize: "10mb"), use:trackController.create)
-  app.on(.POST, "bulkUpload", body: .collect(maxSize: "10mb"), use:trackController.bulkCreate)
   try app.register(collection: trackController)
   try app.register(collection: UserController())
   print(app.routes.all)

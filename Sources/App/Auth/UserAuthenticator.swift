@@ -1,4 +1,5 @@
 import Vapor
+import Fluent
 
 struct UserAuthenticator: AsyncBearerAuthenticator {
     typealias User = App.User
@@ -7,9 +8,14 @@ struct UserAuthenticator: AsyncBearerAuthenticator {
         bearer: BearerAuthorization,
         for request: Request
     ) async throws {
-       if bearer.token == "foo" {
-           request.auth.login(User(name: "Vapor", email: "cool@example.com", passwordHash: "abc123"))
-       }
+      guard let user = try await UserToken.query(on: request.db)
+        .filter(\.$value == bearer.token)
+        .with(\.$user)
+        .first()?
+        .user else {
+        throw Abort(.unauthorized)
+      }
+      request.auth.login(user)
    }
 }
 

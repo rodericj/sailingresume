@@ -1,3 +1,4 @@
+import Fluent
 import Vapor
 
 struct UserSessionAuthenticator: AsyncSessionAuthenticator {
@@ -10,9 +11,13 @@ struct UserSessionAuthenticator: AsyncSessionAuthenticator {
 
 struct UserBearerAuthenticator: AsyncBearerAuthenticator {
   func authenticate(bearer: BearerAuthorization, for request: Request) async throws {
-    if bearer.token == "PXa4W1B8PwtulijcIj5jSg==" {
-      let user = User(name: "", email: "hello@vapor.codes", passwordHash: "")
-      request.auth.login(user)
+    guard let user = try await UserToken.query(on: request.db)
+      .filter(\.$value == bearer.token)
+      .with(\.$user)
+      .first()?
+      .user else {
+      throw Abort(.unauthorized)
     }
+    request.auth.login(user)
   }
 }
