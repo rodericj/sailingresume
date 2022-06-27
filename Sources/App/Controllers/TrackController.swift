@@ -31,13 +31,20 @@ extension Track {
 
 struct TrackController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
+    let protected = routes.grouped(UserAuthenticator())
+    protected.delete("tracks/:trackID", use: delete)
+//    let protected = app.grouped(UserAuthenticator())
     let tracks = routes.grouped("tracks")
     tracks.get(use: index)
     tracks.group(":trackID") { track in
-      track.delete(use: delete)
       track.get("geojson", use: geojson)
       track.get(use: detail)
-      track.post("delete", use: deleteFromWeb)
+
+      let authenticatedTracks = track
+        .grouped(UserAuthenticator())
+        .grouped(User.guardMiddleware())
+      authenticatedTracks.delete(use: delete)
+      authenticatedTracks.post("delete", use: deleteFromWeb)
     }
   }
 

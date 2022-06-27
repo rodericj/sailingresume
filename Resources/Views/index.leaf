@@ -37,6 +37,14 @@
 
 </div>
 
+ <form method="POST" action="/login">
+    <label for="username">Username</label>
+    <input type="text" id="username" placeholder="Username" name="username" autocomplete="username" required autofocus>
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Password" name="password" autocomplete="current-password" required>
+    <input type="submit" value="Sign In">
+</form>
+
 <nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">
     #if(page.page != 1):

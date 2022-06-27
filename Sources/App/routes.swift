@@ -14,7 +14,9 @@ struct Pagination: Content {
   var per: Int = 0
 }
 func routes(_ app: Application) throws {
-  app.get { req async throws -> View in
+  app
+//    .grouped(User.redirectMiddleware(path: "/login?loginRequired=true"))
+    .get { req async throws -> View in
     do {
       _ = try req.query.get(Int.self, at: "page")
       _ = try req.query.get(Int.self, at: "per")
@@ -37,6 +39,7 @@ func routes(_ app: Application) throws {
   app.on(.POST, "upload", body: .collect(maxSize: "10mb"), use:trackController.create)
   app.on(.POST, "bulkUpload", body: .collect(maxSize: "10mb"), use:trackController.bulkCreate)
   try app.register(collection: trackController)
+  try app.register(collection: UserController())
   print(app.routes.all)
 
 }

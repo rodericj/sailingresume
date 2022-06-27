@@ -24,6 +24,11 @@ public func configure(_ app: Application) throws {
   app.migrations.add(CreateTracks())
   app.migrations.add(CreatePoints())
   app.migrations.add(JobModelMigrate())
+  app.migrations.add(CreateUser())
+  app.migrations.add(CreateUserToken())
+
+  app.middleware.use(app.sessions.middleware)
+  app.middleware.use(User.sessionAuthenticator())
 
   let trackJob = TrackCreationJob()
   app.queues.add(trackJob)
@@ -31,7 +36,6 @@ public func configure(_ app: Application) throws {
   app.queues.use(.fluent())
 
   try app.queues.startInProcessJobs(on: .default)
-//  try app.queues.startScheduledJobs()
 
   app.views.use(.leaf)
 
