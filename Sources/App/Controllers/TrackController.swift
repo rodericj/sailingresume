@@ -6,9 +6,11 @@ import ZIPFoundation
 struct GeoJsonResponse: Content {
   struct Feature: Content {
     struct Geometry: Content {
+      var properties: [String: String] = [:]
       var type: String = "LineString"
       let coordinates: [[Double]]
     }
+    var properties: [String: String] = [:]
     var type: String = "Feature"
     let geometry: Geometry
   }
@@ -22,9 +24,9 @@ extension Track {
       .sorted(by: { a, b in
         a.date < b.date
       })
-      .map({ point in
+      .map { point -> [Double] in
         return [point.longitude, point.latitude]
-      })
+      }
     return .init(features: [.init(geometry: .init(coordinates: coordinatePairs))])
   }
 }
