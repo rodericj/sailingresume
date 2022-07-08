@@ -73,7 +73,7 @@ struct TrackController: RouteCollection {
   }
 
   func index(req: Request) async throws -> Page<Track> {
-    try await Track.query(on: req.db).paginate(for: req)
+      try await Track.query(on: req.db).sort(\.$startDate, .descending).paginate(for: req)
   }
 
   func create(req: Request) throws -> EventLoopFuture<HTTPResponseStatus> {
