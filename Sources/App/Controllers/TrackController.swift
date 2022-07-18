@@ -35,7 +35,10 @@ struct TrackController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
 
     // authenticated requests
-    let protected = routes.grouped(UserAuthenticator())
+    let protected = routes
+          .grouped(UserAuthenticator())
+          .grouped(User.guardMiddleware())
+
     protected.on(.POST, "upload", body: .collect(maxSize: "10mb"), use: create)
     protected.on(.POST, "bulkUpload", body: .collect(maxSize: "10mb"), use: bulkCreate)
 
